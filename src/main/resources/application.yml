@@ -1,0 +1,26 @@
+# Comentario
+server:
+    address: 0.0.0.0
+    port: 8080
+
+spring:
+    application:
+        name: fct_bbdd
+    datasource:
+        url: jdbc:h2:file:./bd.fct
+        driverClassName: org.h2.Driver
+        username: sa
+        password: password
+    jpa:
+        database-platform: org.hibernate.dialect.H2Dialect
+        hibernate:
+            ddl-auto: update
+            #ddl-auto: create
+            #ddl-auto=create-drop
+            #ddl-auto=none
+
+
+
+logging:
+    file:
+        name: logs/app.log

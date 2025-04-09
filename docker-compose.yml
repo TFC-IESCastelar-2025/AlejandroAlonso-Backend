@@ -1,0 +1,12 @@
+services:
+  app:
+    image: mi-springboot-app:latest
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    networks:
+      - caddy
+
+networks:
+  caddy:
+    external: true
