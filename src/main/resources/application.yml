@@ -1,18 +1,18 @@
 # Comentario
 server:
-    address: 0.0.0.0
-    port: 8080
+    address: ${SERVER_ADDRESS}
+    port: ${SERVER_PORT}
 
 spring:
     application:
         name: fct_bbdd
     datasource:
-        url: jdbc:h2:file:./bd.fct
-        driverClassName: org.h2.Driver
-        username: sa
-        password: password
+        url: ${DB_URL}
+        driverClassName: com.mysql.cj.jdbc.Driver
+        username: ${DB_USERNAME}
+        password: ${DB_PASSWORD}
     jpa:
-        database-platform: org.hibernate.dialect.H2Dialect
+        database-platform: org.hibernate.dialect.MySQL8Dialect
         hibernate:
             ddl-auto: update
             #ddl-auto: create
