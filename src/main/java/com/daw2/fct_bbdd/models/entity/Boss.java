@@ -5,6 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -32,9 +37,17 @@ public class Boss {
     private String difficulty;
 
     @Column(nullable = false)
-    private String Area;
+    private String area;
+
 
     @Column(nullable = false)
-    private String Height;
+    private String height;
 
+    @ManyToMany
+    @JoinTable(
+            name = "boss_figure",
+            joinColumns = @JoinColumn(name = "boss_id"),
+            inverseJoinColumns = @JoinColumn(name = "figure_id")
+    )
+    private List<Figure> figures = new ArrayList<>();
 }

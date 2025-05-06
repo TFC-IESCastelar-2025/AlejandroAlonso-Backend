@@ -1,12 +1,14 @@
 package com.daw2.fct_bbdd.models.dto;
 
 import com.daw2.fct_bbdd.models.entity.Boss;
+import com.daw2.fct_bbdd.models.entity.Figure;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,6 +23,7 @@ public class BossDTO {
     private String difficulty;
     private String area;
     private String height;
+    private List<String> figures;
 
     public static BossDTO from(Boss entity) {
         BossDTO dto = null;
@@ -34,6 +37,13 @@ public class BossDTO {
             dto.setDifficulty(entity.getDifficulty());
             dto.setArea(entity.getArea());
             dto.setHeight(entity.getHeight());
+            if (entity.getFigures() != null) {
+                dto.setFigures(
+                        entity.getFigures().stream()
+                                .map(Figure::getName)
+                                .collect(Collectors.toList())
+                );
+            }
         }
         return dto;
     }

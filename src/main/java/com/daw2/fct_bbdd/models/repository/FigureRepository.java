@@ -1,13 +1,13 @@
 package com.daw2.fct_bbdd.models.repository;
 
-import com.daw2.fct_bbdd.models.entity.Boss;
+import com.daw2.fct_bbdd.models.entity.Figure;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public interface BossRepository extends JpaRepository<Boss, Long> {
+public interface FigureRepository extends JpaRepository<Figure, Long> {
 
 }
