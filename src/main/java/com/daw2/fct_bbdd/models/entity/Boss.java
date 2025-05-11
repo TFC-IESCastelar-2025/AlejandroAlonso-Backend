@@ -43,9 +43,12 @@ public class Boss {
     @Column(nullable = false)
     private String area;
 
-
     @Column(nullable = false)
     private String height;
+
+    @Lob
+    @Column(unique = true, nullable = false, columnDefinition = "LONGTEXT")
+    private String music;
 
     @ManyToMany
     @JoinTable(

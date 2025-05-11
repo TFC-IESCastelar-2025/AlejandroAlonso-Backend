@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin("*")
 @Slf4j
@@ -48,6 +49,34 @@ public class BossController {
             return new ResponseEntity<>(randomBoss, HttpStatus.OK);
         } catch (Exception e) {
             log.error("Error al obtener el jefe aleatorio", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/random/music")
+    public ResponseEntity<Map<String, String>> getRandomBossMusic() {
+        try {
+            Map<String, String> musicInfo = bossService.getRandomBossMusic();
+            if (musicInfo == null || musicInfo.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(musicInfo, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Error al obtener la música del jefe aleatorio", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/randomtoday/music")
+    public ResponseEntity<Map<String, String>> getRandomBossMusicToday() {
+        try {
+            Map<String, String> musicInfo = bossService.getRandomBossMusicForToday();
+            if (musicInfo == null || musicInfo.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(musicInfo, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Error al obtener la música del jefe aleatorio", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

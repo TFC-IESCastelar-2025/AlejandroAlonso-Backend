@@ -24,6 +24,7 @@ public class BossDTO {
     private String difficulty;
     private String area;
     private String height;
+    private String music;
     private List<String> figures;
 
     public static BossDTO from(Boss entity) {
@@ -39,6 +40,7 @@ public class BossDTO {
             dto.setDifficulty(entity.getDifficulty());
             dto.setArea(entity.getArea());
             dto.setHeight(entity.getHeight());
+            dto.setMusic(entity.getMusic());
             if (entity.getFigures() != null) {
                 dto.setFigures(
                         entity.getFigures().stream()
@@ -72,6 +74,7 @@ public class BossDTO {
         entity.setDifficulty(difficulty);
         entity.setArea(area);
         entity.setHeight(height);
+        entity.setMusic(music);
         return entity;
     }
 }
