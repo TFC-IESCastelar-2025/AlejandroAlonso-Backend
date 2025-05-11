@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 public class BossDTO {
 
     private Long id;
+    private String image;
     private String game;
     private String name;
     private Integer health;
@@ -30,6 +31,7 @@ public class BossDTO {
         if (entity != null) {
             dto = new BossDTO();
             dto.setId(entity.getId());
+            dto.setImage(entity.getImage());
             dto.setGame(entity.getGame());
             dto.setName(entity.getName());
             dto.setHealth(entity.getHealth());
@@ -62,6 +64,7 @@ public class BossDTO {
     public Boss to() {
         Boss entity = new Boss();
         entity.setId(id);
+        entity.setImage(image);
         entity.setGame(game);
         entity.setName(name);
         entity.setHealth(health);

@@ -21,6 +21,10 @@ public class Boss {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Lob
+    @Column(unique = true, nullable = false, columnDefinition = "LONGTEXT")
+    private String image;
+
     @Column(nullable = false)
     private String game;
 
