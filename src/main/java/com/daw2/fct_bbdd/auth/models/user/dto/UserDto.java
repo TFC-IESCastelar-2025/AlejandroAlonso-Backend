@@ -1,6 +1,8 @@
 package com.daw2.fct_bbdd.auth.models.user.dto;
 
 import com.daw2.fct_bbdd.auth.models.user.User;
+import com.daw2.fct_bbdd.models.entity.Boss;
+import com.daw2.fct_bbdd.models.entity.Figure;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,6 +25,7 @@ public class UserDto {
     private String password;
     private Instant createdAt;
     private Instant updatedAt;
+    private List<Boss> bosses;
 
     public static UserDto from(User entity){
         UserDto dto = null;
@@ -33,6 +37,12 @@ public class UserDto {
             dto.setPassword(entity.getPassword());
             dto.setCreatedAt(entity.getCreatedAt());
             dto.setUpdatedAt(entity.getUpdatedAt());
+
+            if (entity.getBosses() != null) {
+                dto.setBosses(
+                    entity.getBosses().stream().collect(Collectors.toList())
+                );
+            }
         }
         return dto;
     }

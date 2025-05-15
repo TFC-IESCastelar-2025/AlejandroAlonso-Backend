@@ -1,6 +1,8 @@
 package com.daw2.fct_bbdd.auth.services;
 
 import com.daw2.fct_bbdd.auth.models.user.User;
+import com.daw2.fct_bbdd.models.entity.Boss;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,4 +18,6 @@ public interface UserService {
     Boolean deleteByUsername(String username);
 
     User updateById(Long id, User updatedUser);
+
+    void addBossToUser(String username, Boss boss);
 }

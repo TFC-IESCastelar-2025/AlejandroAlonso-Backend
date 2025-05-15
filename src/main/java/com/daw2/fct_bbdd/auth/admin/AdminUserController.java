@@ -42,7 +42,7 @@ public class AdminUserController {
     }
 
     @PostMapping("/create")
-    private ResponseEntity<?> createUser(@RequestBody CreateUserDto user){
+    private ResponseEntity<?> createUser(@RequestBody UserDto user){
         try {
             User userSave = user.to();
             userSave.setCreatedAt(Instant.now());

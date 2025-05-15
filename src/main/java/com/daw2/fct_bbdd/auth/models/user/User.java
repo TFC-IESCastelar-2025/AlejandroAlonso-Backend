@@ -1,6 +1,7 @@
 package com.daw2.fct_bbdd.auth.models.user;
 
 import com.daw2.fct_bbdd.auth.models.role.Role;
+import com.daw2.fct_bbdd.models.entity.Boss;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -48,8 +49,6 @@ public class User {
   @Column(length = 150, unique = true)
   private String email;
 
-  @NotBlank
-  @Size(max = 120)
   @Column(length = 60)
   private String password;
 
@@ -58,6 +57,13 @@ public class User {
         joinColumns = @JoinColumn(name = "user_id"), 
         inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Set<Role> roles = new HashSet<>();
+
+  @ManyToMany(fetch = FetchType.LAZY)
+  @JoinTable(  name = "USER_BOSSES",
+          joinColumns = @JoinColumn(name = "user_id"),
+          inverseJoinColumns = @JoinColumn(name = "boss_id"))
+  private Set<Boss> bosses = new HashSet<>();
+
   @CreationTimestamp
   private Instant createdAt;
   @UpdateTimestamp

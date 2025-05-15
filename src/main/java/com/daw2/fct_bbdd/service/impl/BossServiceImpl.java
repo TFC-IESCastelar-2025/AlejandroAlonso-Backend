@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class BossServiceImpl implements BossService {
@@ -26,6 +23,11 @@ public class BossServiceImpl implements BossService {
     @Transactional
     public List<Boss> findAll() {
         return bossRepository.findAll();
+    }
+
+    @Override
+    public Optional<Boss> findById(Long id){
+        return bossRepository.findById(id);
     }
 
     public Boss getRandomBoss() {
