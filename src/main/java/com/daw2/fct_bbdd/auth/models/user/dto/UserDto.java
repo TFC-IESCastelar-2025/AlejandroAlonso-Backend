@@ -1,6 +1,7 @@
 package com.daw2.fct_bbdd.auth.models.user.dto;
 
 import com.daw2.fct_bbdd.auth.models.user.User;
+import com.daw2.fct_bbdd.models.dto.BossDTO;
 import com.daw2.fct_bbdd.models.entity.Boss;
 import com.daw2.fct_bbdd.models.entity.Figure;
 import lombok.AllArgsConstructor;
@@ -25,7 +26,7 @@ public class UserDto {
     private String password;
     private Instant createdAt;
     private Instant updatedAt;
-    private List<Boss> bosses;
+    private List<BossDTO> bosses;
 
     public static UserDto from(User entity){
         UserDto dto = null;
@@ -40,7 +41,8 @@ public class UserDto {
 
             if (entity.getBosses() != null) {
                 dto.setBosses(
-                    entity.getBosses().stream().collect(Collectors.toList())
+                    entity.getBosses().stream()
+                            .map(BossDTO::from).collect(Collectors.toList())
                 );
             }
         }
