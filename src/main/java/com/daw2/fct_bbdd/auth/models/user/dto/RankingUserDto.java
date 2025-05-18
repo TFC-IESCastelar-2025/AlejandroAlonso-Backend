@@ -1,35 +1,39 @@
 package com.daw2.fct_bbdd.auth.models.user.dto;
 
 import com.daw2.fct_bbdd.auth.models.user.User;
+import com.daw2.fct_bbdd.models.dto.BossDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class CreateUserDto {
+public class RankingUserDto {
 
+    private Long id;
     private String username;
-    private String email;
-    private String password;
+    private Integer bossesCount;
 
-    public static UserDto from(User entity){
-        UserDto dto = null;
+    public static RankingUserDto from(User entity){
+        RankingUserDto dto = null;
         if(entity != null){
-            dto = new UserDto();
+            dto = new RankingUserDto();
+            dto.setId(entity.getId());
             dto.setUsername(entity.getUsername());
-            dto.setEmail(entity.getEmail());
-            dto.setPassword(entity.getPassword());
+            if (entity.getBosses() != null) {
+                dto.setBossesCount(entity.getBosses().size());
+            }
         }
         return dto;
     }
 
-    public static List<UserDto> from(List<User> list){
-        List<UserDto> dtos = null;
+    public static List<RankingUserDto> from(List<User> list){
+        List<RankingUserDto> dtos = null;
         if(list != null){
             dtos = new ArrayList<>();
             for(User user : list){
@@ -38,13 +42,4 @@ public class CreateUserDto {
         }
         return dtos;
     }
-
-    public User to(){
-        User entity = new User();
-        entity.setUsername(username);
-        entity.setEmail(email);
-        entity.setPassword(password);
-        return entity;
-    }
-
 }

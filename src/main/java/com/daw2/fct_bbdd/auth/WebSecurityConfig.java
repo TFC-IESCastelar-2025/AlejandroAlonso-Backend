@@ -70,6 +70,7 @@ public class WebSecurityConfig {
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers("/user/ranking").permitAll()
                     .requestMatchers("/boss/**").permitAll()
                     .requestMatchers("/boss/ver").permitAll()
                     .requestMatchers("/health").permitAll()

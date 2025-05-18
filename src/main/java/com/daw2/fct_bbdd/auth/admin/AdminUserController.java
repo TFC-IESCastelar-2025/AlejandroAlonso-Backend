@@ -1,13 +1,14 @@
 package com.daw2.fct_bbdd.auth.admin;
 
 import com.daw2.fct_bbdd.auth.models.user.User;
-import com.daw2.fct_bbdd.auth.models.user.dto.CreateUserDto;
+import com.daw2.fct_bbdd.auth.models.user.dto.RankingUserDto;
 import com.daw2.fct_bbdd.auth.models.user.dto.UserDto;
 import com.daw2.fct_bbdd.auth.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
@@ -25,6 +26,11 @@ public class AdminUserController {
     @GetMapping()
     private List<UserDto> allUser(){
         return UserDto.from(userService.findAll());
+    }
+
+    @GetMapping("/ranking")
+    private List<RankingUserDto> allRankingUser(){
+        return RankingUserDto.from(userService.findAll());
     }
 
     @PostMapping("/find")
@@ -48,7 +54,7 @@ public class AdminUserController {
             userSave.setCreatedAt(Instant.now());
             userSave.setUpdatedAt(Instant.now());
             userService.save(userSave);
-            return ResponseEntity.status(HttpStatus.OK).body(CreateUserDto.from(userSave));
+            return ResponseEntity.status(HttpStatus.OK).body(UserDto.from(userSave));
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error saving user");
         }
