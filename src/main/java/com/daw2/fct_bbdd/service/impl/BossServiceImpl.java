@@ -20,6 +20,8 @@ public class BossServiceImpl implements BossService {
     private Boss lastRandomBoss = null;
     private Boss lastRandomMusicBoss = null;
 
+    private static final Map<LocalDate, Boss> dailyBossCache = new HashMap<>();
+
     @Transactional
     public List<Boss> findAll() {
         return bossRepository.findAll();
@@ -30,6 +32,7 @@ public class BossServiceImpl implements BossService {
         return bossRepository.findById(id);
     }
 
+    @Override
     public Boss getRandomBoss() {
         List<Boss> allBosses = bossRepository.findAll();
         if (allBosses.isEmpty()) {
@@ -44,11 +47,12 @@ public class BossServiceImpl implements BossService {
         return randomBoss;
     }
 
+    @Override
     public Boss getRandomBossForToday() {
         LocalDate today = LocalDate.now();
 
-        if (lastRandomBoss != null && today.isEqual(lastChangeDate)) {
-            return lastRandomBoss;
+        if (dailyBossCache.containsKey(today)) {
+            return dailyBossCache.get(today);
         }
 
         List<Boss> allBosses = bossRepository.findAll();
@@ -57,11 +61,8 @@ public class BossServiceImpl implements BossService {
         }
 
         Random random = new Random();
-        int randomIndex = random.nextInt(allBosses.size());
-        Boss randomBoss = allBosses.get(randomIndex);
-        lastRandomBoss = randomBoss;
-        lastChangeDate = today;
-
+        Boss randomBoss = allBosses.get(random.nextInt(allBosses.size()));
+        dailyBossCache.put(today, randomBoss);
         return randomBoss;
     }
 

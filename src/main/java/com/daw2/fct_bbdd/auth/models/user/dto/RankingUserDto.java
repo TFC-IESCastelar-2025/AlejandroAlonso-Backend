@@ -21,7 +21,7 @@ public class RankingUserDto {
 
     public static RankingUserDto from(User entity){
         RankingUserDto dto = null;
-        if(entity != null){
+        if(entity != null && entity.getEnabled()){
             dto = new RankingUserDto();
             dto.setId(entity.getId());
             dto.setUsername(entity.getUsername());
