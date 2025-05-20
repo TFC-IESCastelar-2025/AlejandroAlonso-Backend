@@ -14,6 +14,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -51,6 +52,15 @@ public class User {
 
   @Column(length = 60)
   private String password;
+
+  @Column
+  private Long streak;
+
+  @Column(name = "last_streak_update")
+  private LocalDate lastStreakUpdate;
+
+  @Column
+  private Long maxStreak;
 
   @Column
   private Boolean enabled = false;

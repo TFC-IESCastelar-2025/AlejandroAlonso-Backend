@@ -21,8 +21,20 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Transactional
-    public User save(User user){
-        user.setPassword(encoder.encode(user.getPassword()));
+    public User save(User user) {
+        User existingUser = null;
+        if (user.getId() != null) {
+            existingUser = userRepository.findById(user.getId()).orElse(null);
+        }
+
+        if (existingUser != null) {
+            user.setPassword(existingUser.getPassword());
+        } else {
+            if (user.getPassword() != null) {
+                user.setPassword(encoder.encode(user.getPassword()));
+            }
+        }
+
         return userRepository.save(user);
     }
 
@@ -69,7 +81,6 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         user.getBosses().add(boss);
-        // No hace falta llamar a save(user), porque la operación es dentro de una transacción y JPA lo persiste automáticamente
     }
 
 }
