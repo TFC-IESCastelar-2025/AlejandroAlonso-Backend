@@ -75,7 +75,6 @@ public class WebSecurityConfig {
                     .requestMatchers("/boss/ver").permitAll()
                     .requestMatchers("/health").permitAll()
                     .requestMatchers("/validate/**").permitAll()
-                            .requestMatchers("/profile/**").permitAll()
                     .anyRequest().authenticated()
 //                    .anyRequest().permitAll()
             );
