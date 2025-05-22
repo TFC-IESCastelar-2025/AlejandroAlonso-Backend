@@ -71,6 +71,7 @@ public class WebSecurityConfig {
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers("/auth/**").permitAll()
                     .requestMatchers("/user/ranking").permitAll()
+                    .requestMatchers("/profile/ranking-streak").permitAll()
                     .requestMatchers("/boss/**").permitAll()
                     .requestMatchers("/boss/ver").permitAll()
                     .requestMatchers("/health").permitAll()

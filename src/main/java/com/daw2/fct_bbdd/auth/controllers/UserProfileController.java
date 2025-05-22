@@ -62,7 +62,6 @@ public class UserProfileController {
         if (daysBetween >= 2) {
             User existingUser = userService.findByUsername(username);
             existingUser.setStreak(0L);
-            existingUser.setLastStreakUpdate(today);
             userService.save(existingUser);
             return ResponseEntity.ok(0L);
         }
