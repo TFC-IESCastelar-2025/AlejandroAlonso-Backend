@@ -17,6 +17,8 @@ public interface UserService {
 
     Boolean deleteByUsername(String username);
 
+    Boolean deleteByTokenUserId(Long Userid);
+
     User updateById(Long id, User updatedUser);
 
     void addBossToUser(String username, Boss boss);

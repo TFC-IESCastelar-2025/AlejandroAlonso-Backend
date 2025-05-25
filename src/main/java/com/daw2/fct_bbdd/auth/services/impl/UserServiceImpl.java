@@ -1,7 +1,9 @@
 package com.daw2.fct_bbdd.auth.services.impl;
 
 import com.daw2.fct_bbdd.auth.models.user.User;
+import com.daw2.fct_bbdd.auth.models.verificationToken.VerificationToken;
 import com.daw2.fct_bbdd.auth.repository.UserRepository;
+import com.daw2.fct_bbdd.auth.repository.VerificationTokenRepository;
 import com.daw2.fct_bbdd.auth.services.UserService;
 import com.daw2.fct_bbdd.models.entity.Boss;
 import jakarta.transaction.Transactional;
@@ -19,6 +21,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private VerificationTokenRepository verificationTokenRepository;
 
     @Transactional
     public User save(User user) {
@@ -55,6 +60,19 @@ public class UserServiceImpl implements UserService {
             return false;
         } else{
             userRepository.delete(user);
+            return true;
+        }
+    }
+
+    @Transactional
+    @Override
+    public Boolean deleteByTokenUserId(Long Userid) {
+        VerificationToken verificationToken = verificationTokenRepository.findByUserId(Userid).orElse(null);
+
+        if(verificationToken == null){
+            return false;
+        } else{
+            verificationTokenRepository.delete(verificationToken);
             return true;
         }
     }

@@ -12,4 +12,5 @@ public class EnvironmentData {
     private final String JWT_SECRET_TOKEN = dotenv.get("jwt.jwtSecret");
     private final String JWT_EXP_TIME = dotenv.get("jwt.jwtExpirationMs");
 
+    private final String FRONT_ENVIRONMENT = dotenv.get("frontEnvironment");
 }

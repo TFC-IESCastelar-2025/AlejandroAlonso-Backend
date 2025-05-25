@@ -13,7 +13,10 @@ import com.daw2.fct_bbdd.auth.repository.RoleRepository;
 import com.daw2.fct_bbdd.auth.repository.UserRepository;
 import com.daw2.fct_bbdd.auth.repository.VerificationTokenRepository;
 import com.daw2.fct_bbdd.auth.services.EmailService;
+import com.daw2.fct_bbdd.auth.services.UserService;
 import com.daw2.fct_bbdd.auth.services.impl.UserDetailsImpl;
+import com.daw2.fct_bbdd.common.utils.EnvironmentData;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +41,9 @@ public class AuthController {
     AuthenticationManager authenticationManager;
 
     @Autowired
+    UserService userService;
+
+    @Autowired
     UserRepository userRepository;
 
     @Autowired
@@ -54,6 +60,9 @@ public class AuthController {
 
     @Autowired
     JwtUtils jwtUtils;
+
+    @Autowired
+    EnvironmentData env;
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -96,13 +105,13 @@ public class AuthController {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("Error: Name " + signUpRequest.getUsername() + " already registered."));
+                    .body(new MessageResponse("El nombre de usuario " + signUpRequest.getUsername() + " ya existe."));
         }
 
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("Error: Email " + signUpRequest.getEmail() + " already registered."));
+                    .body(new MessageResponse("El correo " + signUpRequest.getEmail() + " ya existe."));
         }
 
         // Create new user's account
@@ -147,24 +156,71 @@ public class AuthController {
 
         return ResponseEntity.ok(new MessageResponse("Usuario registrado. Revisa tu correo para confirmar la cuenta."));
     }
-  @GetMapping("/verify")
-  public ResponseEntity<?> verifyAccount(@RequestParam String token) {
-    Optional<VerificationToken> optToken = verificationTokenRepository.findByToken(token);
 
-    if (optToken.isEmpty()) {
-      return ResponseEntity.badRequest().body(new MessageResponse("Token inválido"));
+   @GetMapping("/verify")
+    public ResponseEntity<?> verifyAccount(@RequestParam String token) {
+     Optional<VerificationToken> optToken = verificationTokenRepository.findByToken(token);
+
+     if (optToken.isEmpty()) {
+       return ResponseEntity.badRequest().body(new MessageResponse("Token inválido"));
+     }
+
+     VerificationToken verificationToken = optToken.get();
+     if (verificationToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+       return ResponseEntity.badRequest().body(new MessageResponse("Token expirado"));
+     }
+
+     User user = verificationToken.getUser();
+     user.setEnabled(true);
+     userRepository.save(user);
+
+     return ResponseEntity.ok(new MessageResponse("Cuenta verificada con éxito."));
+   }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestParam String email) {
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body(new MessageResponse("No existe una cuenta con ese correo."));
+        }
+
+        User user = userOpt.get();
+
+        userService.deleteByTokenUserId(user.getId());
+
+        String token = UUID.randomUUID().toString();
+        VerificationToken resetToken = new VerificationToken();
+        resetToken.setToken(token);
+        resetToken.setUser(user);
+        resetToken.setExpiryDate(LocalDateTime.now().plusHours(1));
+        verificationTokenRepository.save(resetToken);
+
+        String resetLink = env.getFRONT_ENVIRONMENT() +"/reset-password?token=" + token;
+        emailService.sendPasswordResetEmail(user.getEmail(), resetLink);
+
+        return ResponseEntity.ok(new MessageResponse("Se ha enviado un correo para restablecer la contraseña."));
     }
 
-    VerificationToken verificationToken = optToken.get();
-    if (verificationToken.getExpiryDate().isBefore(LocalDateTime.now())) {
-      return ResponseEntity.badRequest().body(new MessageResponse("Token expirado"));
+    @Transactional
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
+        Optional<VerificationToken> optToken = verificationTokenRepository.findByToken(token);
+        if (optToken.isEmpty()) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Token inválido."));
+        }
+
+        VerificationToken verificationToken = optToken.get();
+
+        if (verificationToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+            return ResponseEntity.badRequest().body(new MessageResponse("El token ha expirado."));
+        }
+
+        User user = verificationToken.getUser();
+        user.setPassword(encoder.encode(newPassword));
+        userRepository.save(user);
+
+        verificationTokenRepository.delete(verificationToken);
+
+        return ResponseEntity.ok(new MessageResponse("Contraseña actualizada con éxito."));
     }
-
-    User user = verificationToken.getUser();
-    user.setEnabled(true);
-    userRepository.save(user);
-
-    return ResponseEntity.ok(new MessageResponse("Cuenta verificada con éxito."));
-  }
-
 }

@@ -20,6 +20,7 @@ public class VerificationToken {
     private String token;
 
     @OneToOne
+    @JoinColumn(name = "user_id", unique = true)
     private User user;
 
     private LocalDateTime expiryDate;
