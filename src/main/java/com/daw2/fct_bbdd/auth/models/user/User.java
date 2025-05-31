@@ -39,12 +39,10 @@ public class User {
     this.password = password;
   }
 
-  @NotBlank
   @Size(max = 20)
   @Column(length = 50, unique = true)
   private String username;
 
-  @NotBlank
   @Size(max = 50)
   @Email
   @Column(length = 150, unique = true)

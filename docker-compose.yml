@@ -1,9 +1,12 @@
 services:
   app:
-    image: mi-springboot-app:latest
+    image: backsoulsdle:latest
+    container_name: springback
     restart: unless-stopped
     ports:
-      - "8080:8080"
+      - "4242:4242"
+    env_file:
+      - .env
     networks:
       - caddy
 

@@ -4,6 +4,8 @@ import com.daw2.fct_bbdd.auth.models.user.User;
 import com.daw2.fct_bbdd.auth.models.user.dto.RankingStreakUserDto;
 import com.daw2.fct_bbdd.auth.models.user.dto.RankingUserDto;
 import com.daw2.fct_bbdd.auth.models.user.dto.UserDto;
+import com.daw2.fct_bbdd.auth.payload.response.MessageResponse;
+import com.daw2.fct_bbdd.auth.repository.UserRepository;
 import com.daw2.fct_bbdd.auth.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ public class UserProfileController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    UserRepository userRepository;
 
     /**
      * Devuelve los datos del usuario autenticado
@@ -112,21 +117,34 @@ public class UserProfileController {
      * Actualiza los datos del usuario autenticado
      */
     @PutMapping
-    public ResponseEntity<User> updateProfile(@Valid @RequestBody User updatedUser, Authentication authentication) {
-        String username = authentication.getName();
-        User existingUser = userService.findByUsername(username);
+    public ResponseEntity<?> updateProfile(@Valid @RequestBody User updatedUser, Authentication authentication) {
+        String currentUsername = authentication.getName();
+        User currentUser = userService.findByUsername(currentUsername);
 
-        if (existingUser == null) {
+        if (currentUser == null) {
             return ResponseEntity.notFound().build();
         }
 
-        User updated = userService.updateById(existingUser.getId(), updatedUser);
+        if (updatedUser.getUsername() != null && !updatedUser.getUsername().equals(currentUser.getUsername()) &&
+                userRepository.existsByUsername(updatedUser.getUsername())) {
+            return ResponseEntity.badRequest()
+                    .body(new MessageResponse("El nombre de usuario " + updatedUser.getUsername() + " ya existe."));
+        }
+
+        if (updatedUser.getEmail() != null && !updatedUser.getEmail().equals(currentUser.getEmail()) &&
+                userRepository.existsByEmail(updatedUser.getEmail())) {
+            return ResponseEntity.badRequest()
+                    .body(new MessageResponse("El correo " + updatedUser.getEmail() + " ya existe."));
+        }
+
+        User updated = userService.updateById(currentUser.getId(), updatedUser);
 
         if (updated == null) {
             return ResponseEntity.badRequest().build();
         }
 
-        updated.setPassword(null);
+        updated.setPassword(null); // Evitar devolver la contraseña
         return ResponseEntity.ok(updated);
     }
+
 }

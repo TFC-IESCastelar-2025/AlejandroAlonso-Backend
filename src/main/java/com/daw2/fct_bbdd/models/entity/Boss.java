@@ -50,7 +50,7 @@ public class Boss {
     @Column(unique = true, nullable = false, columnDefinition = "LONGTEXT")
     private String music;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "boss_figure",
             joinColumns = @JoinColumn(name = "boss_id"),

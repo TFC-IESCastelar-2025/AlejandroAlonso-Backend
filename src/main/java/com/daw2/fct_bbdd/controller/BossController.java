@@ -2,6 +2,7 @@ package com.daw2.fct_bbdd.controller;
 
 import com.daw2.fct_bbdd.auth.models.user.User;
 import com.daw2.fct_bbdd.auth.services.UserService;
+import com.daw2.fct_bbdd.common.utils.BossCache;
 import com.daw2.fct_bbdd.models.dto.BossDTO;
 import com.daw2.fct_bbdd.models.entity.Boss;
 import com.daw2.fct_bbdd.service.BossService;
@@ -27,9 +28,12 @@ public class BossController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    private BossCache bossCache;
+
     @GetMapping("/ver")
     public List<BossDTO> ver() {
-        return BossDTO.from(bossService.findAll());
+        return BossDTO.from(bossCache.getBosses());
     }
 
     @GetMapping("/random")

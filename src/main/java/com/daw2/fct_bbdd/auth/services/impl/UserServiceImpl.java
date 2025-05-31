@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -81,8 +82,14 @@ public class UserServiceImpl implements UserService {
     public User updateById(Long id, User updatedUser){
         User existingUser = userRepository.findById(id).orElse(null);
         if(existingUser != null){
-            existingUser.setUsername(updatedUser.getUsername());
-            existingUser.setEmail(updatedUser.getEmail());
+            if (updatedUser.getUsername() != null &&
+                    !Objects.equals(updatedUser.getUsername(), existingUser.getUsername())) {
+                existingUser.setUsername(updatedUser.getUsername());
+            }
+            if (updatedUser.getEmail() != null &&
+                    !Objects.equals(updatedUser.getEmail(), existingUser.getEmail())) {
+                existingUser.setEmail(updatedUser.getEmail());
+            }
             if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
                 existingUser.setPassword(encoder.encode(updatedUser.getPassword()));
             }

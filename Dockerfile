@@ -1,5 +1,6 @@
-FROM openjdk:23
+FROM openjdk:21
 WORKDIR /app
-COPY ./fct_bbdd-0.0.1-SNAPSHOT.jar /app
-EXPOSE 8080
+COPY ./target/fct_bbdd-0.0.1-SNAPSHOT.jar /app
+COPY .env .env
+EXPOSE 4242
 CMD ["java", "-jar", "fct_bbdd-0.0.1-SNAPSHOT.jar"]
