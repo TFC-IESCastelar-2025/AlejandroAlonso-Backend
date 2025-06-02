@@ -19,7 +19,7 @@ public class RankingStreakUserDto {
 
     public static RankingStreakUserDto from(User entity){
         RankingStreakUserDto dto = null;
-        if(entity != null && entity.getEnabled() && entity.getMaxStreak() != null){
+        if(entity != null && entity.getEnabled() && entity.getMaxStreak() != null && entity.getMaxStreak() > 1){
             dto = new RankingStreakUserDto();
             dto.setId(entity.getId());
             dto.setUsername(entity.getUsername());
